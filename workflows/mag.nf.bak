@@ -62,7 +62,7 @@ include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD } from '../modules
 include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN } from '../modules/local/bowtie2_removal_align'
 include { PORECHOP                                            } from '../modules/local/porechop'
 include { NANOLYSE                                            } from '../modules/local/nanolyse'
-include { FILTLONG; FILTLONG_NOREF                            } from '../modules/local/filtlong'
+include { FILTLONG                                            } from '../modules/local/filtlong'
 include { NANOPLOT as NANOPLOT_RAW                            } from '../modules/local/nanoplot'
 include { NANOPLOT as NANOPLOT_FILTERED                       } from '../modules/local/nanoplot'
 include { CENTRIFUGE_DB_PREPARATION                           } from '../modules/local/centrifuge_db_preparation'
@@ -77,8 +77,6 @@ include { POOL_SINGLE_READS as POOL_LONG_READS                } from '../modules
 include { MEGAHIT                                             } from '../modules/local/megahit'
 include { SPADES                                              } from '../modules/local/spades'
 include { SPADESHYBRID                                        } from '../modules/local/spadeshybrid'
-include { MHM2                                                } from '../modules/local/metahipmer2'
-include { FLYE                                                } from '../modules/local/flye'
 include { QUAST                                               } from '../modules/local/quast'
 include { QUAST_BINS                                          } from '../modules/local/quast_bins'
 include { QUAST_BINS_SUMMARY                                  } from '../modules/local/quast_bins_summary'
@@ -212,7 +210,7 @@ if (gtdb) {
 def multiqc_report    = []
 def busco_failed_bins = [:]
 
-workflow MAG_SIMPLE {
+workflow MAG {
 
     ch_versions = Channel.empty()
 
@@ -221,20 +219,19 @@ workflow MAG_SIMPLE {
     if ( !params.checkm_db ) {
         ARIA2_UNTAR ("https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz")
         ch_checkm_db = ARIA2_UNTAR.out.downloaded_file
-    }
+     }
 
 
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
     INPUT_CHECK ()
-    ch_raw_short_reads = INPUT_CHECK.out.raw_short_reads.filter { it[1][0] != false }
+    ch_raw_short_reads = INPUT_CHECK.out.raw_short_reads
     ch_raw_long_reads  = INPUT_CHECK.out.raw_long_reads
-
-    // ch_raw_short_reads.view()
-    // ch_raw_long_reads.view()
-    // // ch_raw_short_reads.ifEmpty { error "No short reads data found" }
-    // // ch_raw_long_reads.ifEmpty { error "No long reads data found" }
+    // // ch_raw_long_reads.view()
+    // // println "Is 'ch_raw_long_reads' empty? ${ch_raw_long_reads.empty()}"
+    // ch_raw_short_reads.ifEmpty { error "No short reads data found" }
+    // ch_raw_long_reads.ifEmpty { error "No long reads data found" }
     /*
     ================================================================================
                                     Preprocessing and QC for short reads
@@ -344,29 +341,19 @@ workflow MAG_SIMPLE {
     }
 
     // join long and short reads by sample name
-    if (params.short_read && params.long_read){
-        ch_short_reads_tmp = ch_short_reads
-            .map { meta, sr -> [ meta.id, meta, sr ] }
+    ch_short_reads_tmp = ch_short_reads
+        .map { meta, sr -> [ meta.id, meta, sr ] }
 
-        ch_short_and_long_reads = ch_long_reads
-            .map { meta, lr -> [ meta.id, meta, lr ] }
-            .join(ch_short_reads_tmp, by: 0)
-            .map { id, meta_lr, lr, meta_sr, sr -> [ meta_lr, lr, sr[0], sr[1] ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
+    ch_short_and_long_reads = ch_long_reads
+        .map { meta, lr -> [ meta.id, meta, lr ] }
+        .join(ch_short_reads_tmp, by: 0)
+        .map { id, meta_lr, lr, meta_sr, sr -> [ meta_lr, lr, sr[0], sr[1] ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
 
-        FILTLONG (
-            ch_short_and_long_reads
-        )
-        ch_long_reads = FILTLONG.out.reads
-        ch_versions = ch_versions.mix(FILTLONG.out.versions.first())
-    }
-    else {
-        FILTLONG_NOREF (
-            ch_long_reads
-        )
-        ch_long_reads = FILTLONG_NOREF.out.reads
-        ch_versions = ch_versions.mix(FILTLONG_NOREF.out.versions.first())
-    }
-    
+    FILTLONG (
+        ch_short_and_long_reads
+    )
+    ch_long_reads = FILTLONG.out.reads
+    ch_versions = ch_versions.mix(FILTLONG.out.versions.first())
 
     NANOPLOT_FILTERED (
         ch_long_reads
@@ -408,12 +395,11 @@ workflow MAG_SIMPLE {
         ch_versions = ch_versions.mix(KRONA.out.versions.first())
     }
 
-
-     /*
-    // ================================================================================
-    //                                 Assembly
-    // ================================================================================
-    // */
+    /*
+    ================================================================================
+                                    Assembly
+    ================================================================================
+    */
 
     // Co-assembly: prepare grouping for MEGAHIT and for pooling for SPAdes
     if (params.coassemble_group) {
@@ -448,10 +434,7 @@ workflow MAG_SIMPLE {
                     else [ meta, [reads], [] ] }
     }
 
-    // assembly channel
     ch_assemblies = Channel.empty()
-
-    // MEGAHIT
     if (!params.skip_megahit){
         MEGAHIT ( ch_short_reads_grouped )
         ch_megahit_assemblies = MEGAHIT.out.assembly
@@ -462,19 +445,6 @@ workflow MAG_SIMPLE {
             }
         ch_assemblies = ch_assemblies.mix(ch_megahit_assemblies)
         ch_versions = ch_versions.mix(MEGAHIT.out.versions.first())
-    }
-
-    // MHM2
-    if (!params.skip_mhm2){
-        MHM2 ( ch_short_reads_grouped )
-        ch_mhm2_assemblies = MHM2.out.assembly
-            .map { meta, assembly ->
-                def meta_new = meta.clone()
-                meta_new.assembler  = "MHM2"
-                [ meta_new, assembly ]
-            }
-        ch_assemblies = ch_assemblies.mix(ch_mhm2_assemblies)
-        ch_versions = ch_versions.mix(MHM2.out.versions.first())
     }
 
     // Co-assembly: pool reads for SPAdes
@@ -528,35 +498,6 @@ workflow MAG_SIMPLE {
             }
         ch_assemblies = ch_assemblies.mix(ch_spadeshybrid_assemblies)
         ch_versions = ch_versions.mix(SPADESHYBRID.out.versions.first())
-    }
-
-    // ch_quast_multiqc = Channel.empty()
-    // if (!params.skip_quast){
-    //     QUAST ( ch_assemblies )
-    //     ch_quast_multiqc = QUAST.out.qc
-    //     ch_versions = ch_versions.mix(QUAST.out.versions.first())
-    // }
-
-    // Co-assembly: pool reads for FLYE, long reads only
-    if (params.coassemble_group) {
-        // long reads
-        //! define param: only_long_reads, skip_flye
-        POOL_LONG_READS ( ch_long_reads_grouped )
-        ch_long_reads_flye = POOL_LONG_READS.out.reads
-    } else {
-        ch_long_reads_flye = ch_long_reads
-            .map { meta, reads -> [ meta, [reads] ] }
-    }
-    if (!params.skip_flye){
-        FLYE ( ch_long_reads_flye, params.mode )
-        ch_flye_assemblies = FLYE.out.assembly
-            .map { meta, assembly ->
-                def meta_new = meta.clone()
-                meta_new.assembler  = "Flye"
-                [ meta_new, assembly ]
-            }
-        ch_assemblies = ch_assemblies.mix(ch_flye_assemblies)
-        ch_versions = ch_versions.mix(FLYE.out.versions.first())
     }
 
     ch_quast_multiqc = Channel.empty()
@@ -859,9 +800,7 @@ workflow MAG_SIMPLE {
         ch_multiqc_readprep.collect().ifEmpty([])
     )
     multiqc_report = MULTIQC.out.report.toList()
-
 }
-
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -869,15 +808,15 @@ workflow MAG_SIMPLE {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// workflow.onComplete {
-//     if (params.email || params.email_on_fail) {
-//         NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report, busco_failed_bins)
-//     }
-//     NfcoreTemplate.summary(workflow, params, log, busco_failed_bins)
-//     if (params.hook_url) {
-//         NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
-//     }
-// }
+workflow.onComplete {
+    if (params.email || params.email_on_fail) {
+        NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report, busco_failed_bins)
+    }
+    NfcoreTemplate.summary(workflow, params, log, busco_failed_bins)
+    if (params.hook_url) {
+        NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
+    }
+}
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

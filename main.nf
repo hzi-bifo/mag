@@ -27,12 +27,17 @@ WorkflowMain.initialise(workflow, params, log)
 */
 
 include { MAG } from './workflows/mag'
+// include { MAG_NEW } from './workflows/mag_new'
+// include { MAG_SIMPLE } from './workflows/mag_simple'
+
 
 //
 // WORKFLOW: Run main nf-core/mag analysis pipeline
 //
 workflow NFCORE_MAG {
     MAG ()
+    // MAG_NEW ()
+    // MAG_SIMPLE ()
 }
 
 /*

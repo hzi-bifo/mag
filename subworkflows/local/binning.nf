@@ -78,6 +78,18 @@ workflow BINNING {
         ch_versions = ch_versions.mix(CONVERT_DEPTHS.out.versions.first())
     }
 
+    if ( !params.skip_metabinner ) {
+        CONVERT_DEPTHS ( ch_metabat2_input )
+        ch_metabinner_input = CONVERT_DEPTHS.out.output
+            .map { meta, assembly, reads, depth ->
+                    def meta_new = meta.clone()
+                    meta_new['binner'] = 'Metabinner'
+
+                [ meta_new, assembly, reads, depth ]
+            }
+        ch_versions = ch_versions.mix(CONVERT_DEPTHS.out.versions.first())
+    }
+
     // main bins for decompressing for MAG_DEPTHS
     ch_final_bins_for_gunzip = Channel.empty()
     // final gzipped bins
@@ -96,6 +108,13 @@ workflow BINNING {
         ch_final_bins_for_gunzip = ch_final_bins_for_gunzip.mix( ADJUST_MAXBIN2_EXT.out.renamed_bins.transpose() )
         ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix( ADJUST_MAXBIN2_EXT.out.renamed_bins )
         ch_versions = ch_versions.mix(MAXBIN2.out.versions)
+    }
+    if ( !params.skip_metabinner ) {
+        METABINNER ( ch_metabinner_input )
+        // ADJUST_MAXBIN2_EXT ( MAXBIN2.out.binned_fastas )
+        // ch_final_bins_for_gunzip = ch_final_bins_for_gunzip.mix( ADJUST_MAXBIN2_EXT.out.renamed_bins.transpose() )
+        // ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix( ADJUST_MAXBIN2_EXT.out.renamed_bins )
+        // ch_versions = ch_versions.mix(MAXBIN2.out.versions)
     }
     if ( !params.skip_concoct ){
 

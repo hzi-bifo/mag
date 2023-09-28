@@ -20,11 +20,15 @@ workflow INPUT_CHECK {
                         def sr1 = row.short_reads_1 ? file(row.short_reads_1, checkIfExists: true) : false
                         def sr2 = row.short_reads_2 ? file(row.short_reads_2, checkIfExists: true) : false
                         def lr = row.long_reads ? file(row.long_reads, checkIfExists: true) : false
+                        // def type = (sr1 && lr) ? "hybrid" : (sr1) ? "short" : "long"
                         // Check if given combination is valid
-                        if (!sr1) exit 1, "Invalid input samplesheet: short_reads_1 can not be empty."
-                        if (!sr2 && lr) exit 1, "Invalid input samplesheet: invalid combination of single-end short reads and long reads provided! SPAdes does not support single-end data and thus hybrid assembly cannot be performed."
-                        if (!sr2 && !params.single_end) exit 1, "Invalid input samplesheet: single-end short reads provided, but command line parameter `--single_end` is false. Note that either only single-end or only paired-end reads must provided."
-                        if (sr2 && params.single_end) exit 1, "Invalid input samplesheet: paired-end short reads provided, but command line parameter `--single_end` is true. Note that either only single-end or only paired-end reads must provided."
+                        // if (!sr1) exit 1, "Invalid input samplesheet: short_reads_1 can not be empty."
+                        // we can have pe short, se short, or pe + lr, can not have se sr1 + lr, sr2 && !sr1 
+                        if (!sr2 && sr1 && lr) exit 1, "Invalid input samplesheet: invalid combination of single-end short reads and long reads provided! SPAdes does not support single-end data and thus hybrid assembly cannot be performed."
+                        //if (!sr2 && lr) exit 1, "Invalid input samplesheet: invalid combination of single-end short reads and long reads provided! SPAdes does not support single-end data and thus hybrid assembly cannot be performed."
+                        if (sr2 && !sr1) exit 1, "Invalid input samplesheet: paired-end short reads without first end."
+                        if (sr1 && !sr2 && !params.single_end) exit 1, "Invalid input samplesheet: single-end short reads provided, but command line parameter `--single_end` is false. Note that either only single-end or only paired-end reads must provided."
+                        if (sr1 && sr2 && params.single_end) exit 1, "Invalid input samplesheet: paired-end short reads provided, but command line parameter `--single_end` is true. Note that either only single-end or only paired-end reads must provided."
                         return [ id, group, sr1, sr2, lr ]
                     } else {
                         exit 1, "Input samplesheet contains row with ${row.size()} column(s). Expects 5."
@@ -52,6 +56,7 @@ workflow INPUT_CHECK {
                         }
                 }
     } else {
+        // input for long reads only and hybrid
         ch_raw_short_reads = Channel
             .fromFilePairs(params.input, size: params.single_end ? 1 : 2)
             .ifEmpty { exit 1, "Cannot find any reads matching: ${params.input}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --single_end on the command line." }

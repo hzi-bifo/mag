@@ -560,6 +560,14 @@
                 "skip_quast": {
                     "type": "boolean",
                     "description": "Skip metaQUAST."
+                },
+                "skip_flye": {
+                    "type": "boolean",
+                    "description": "Skip Flye."
+                },
+                "only_long_read": {
+                    "type": "boolean",
+                    "description": "Only long reads data."
                 }
             }
         },
