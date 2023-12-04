@@ -76,6 +76,7 @@ include { POOL_PAIRED_READS                                   } from '../modules
 include { POOL_SINGLE_READS as POOL_LONG_READS                } from '../modules/local/pool_single_reads'
 include { MEGAHIT                                             } from '../modules/local/megahit'
 include { SPADES                                              } from '../modules/local/spades'
+include { METABINNER                                          } from '../modules/local/metabinner'
 include { SPADESHYBRID                                        } from '../modules/local/spadeshybrid'
 include { MHM2                                                } from '../modules/local/metahipmer2'
 include { FLYE                                                } from '../modules/local/flye'
@@ -212,7 +213,7 @@ if (gtdb) {
 def multiqc_report    = []
 def busco_failed_bins = [:]
 
-workflow MAG_SIMPLE {
+workflow MAG {
 
     ch_versions = Channel.empty()
 

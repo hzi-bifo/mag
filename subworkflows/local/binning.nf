@@ -1,5 +1,5 @@
 /*
- * Binning with MetaBAT2 and MaxBin2
+ * Binning with MetaBAT2, MaxBin2 and Metabinner
  */
 
 include { METABAT2_METABAT2                     } from '../../modules/nf-core/metabat2/metabat2/main'
@@ -8,6 +8,7 @@ include { MAXBIN2                               } from '../../modules/nf-core/ma
 include { GUNZIP as GUNZIP_BINS                 } from '../../modules/nf-core/gunzip/main'
 include { GUNZIP as GUNZIP_UNBINS               } from '../../modules/nf-core/gunzip/main'
 
+include { METABINNER                            } from '../../modules/local/metabinner'
 include { CONVERT_DEPTHS                        } from '../../modules/local/convert_depths'
 include { ADJUST_MAXBIN2_EXT                    } from '../../modules/local/adjust_maxbin2_ext'
 include { SPLIT_FASTA                           } from '../../modules/local/split_fasta'
@@ -79,7 +80,6 @@ workflow BINNING {
     }
 
     if ( !params.skip_metabinner ) {
-        CONVERT_DEPTHS ( ch_metabat2_input )
         ch_metabinner_input = CONVERT_DEPTHS.out.output
             .map { meta, assembly, reads, depth ->
                     def meta_new = meta.clone()
@@ -111,10 +111,9 @@ workflow BINNING {
     }
     if ( !params.skip_metabinner ) {
         METABINNER ( ch_metabinner_input )
-        // ADJUST_MAXBIN2_EXT ( MAXBIN2.out.binned_fastas )
-        // ch_final_bins_for_gunzip = ch_final_bins_for_gunzip.mix( ADJUST_MAXBIN2_EXT.out.renamed_bins.transpose() )
-        // ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix( ADJUST_MAXBIN2_EXT.out.renamed_bins )
-        // ch_versions = ch_versions.mix(MAXBIN2.out.versions)
+        ch_final_bins_for_gunzip = ch_final_bins_for_gunzip.mix( METABINNER.out.binned_fastas )
+        ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix( METABINNER.out.binned_fastas )
+        ch_versions = ch_versions.mix(METABINNER.out.versions)
     }
     if ( !params.skip_concoct ){
 
