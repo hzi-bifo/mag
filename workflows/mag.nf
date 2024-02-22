@@ -77,6 +77,7 @@ include { POOL_SINGLE_READS as POOL_LONG_READS                } from '../modules
 include { MEGAHIT                                             } from '../modules/local/megahit'
 include { SPADES                                              } from '../modules/local/spades'
 include { METABINNER                                          } from '../modules/local/metabinner'
+include { METAWRAP					      } from '../modules/local/metawrap'
 include { SPADESHYBRID                                        } from '../modules/local/spadeshybrid'
 include { MHM2                                                } from '../modules/local/metahipmer2'
 include { FLYE                                                } from '../modules/local/flye'
@@ -637,6 +638,15 @@ workflow MAG {
         ch_versions = ch_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first())
         ch_versions = ch_versions.mix(BINNING.out.versions)
 
+	/*
+	* MetaWRAP: binning refinement
+	*/
+
+	if (!params.skip_metawrap){
+	    ch_input_for_metawrap = BINNING.out.bins.map { it[1] }
+	    METAWRAP(ch_input_for_metawrap)
+	}
+
         /*
         * DAS Tool: binning refinement
         */
@@ -667,7 +677,8 @@ workflow MAG {
                 ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned)
                 ch_input_for_binsummary              = BINNING.out.depths_summary
         }
-
+		
+			
         /*
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, and/or GUNC
         */
@@ -848,6 +859,7 @@ workflow MAG {
         ch_fastqc_trimmed_multiqc = FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([])
     }
 
+	
     MULTIQC (
         ch_multiqc_files.collect(),
         ch_multiqc_custom_config.collect().ifEmpty([]),

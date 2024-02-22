@@ -14,13 +14,13 @@ try:
 except OSerror as error:
     pass
 
-bins = {}
+Metabinner_bins = {}
 with open(binning, 'r') as b:
     for line in b:
         contig, bin = line.strip().split('\t')
-        bins[contig] = bin
+        Metabinner_bins[contig] = bin
 
-for outf in set(bins.values()):
+for outf in set(Metabinner_bins.values()):
     name = prefix + outf + ".fa"
     open(os.path.join(path, name), 'w')
 
@@ -28,9 +28,9 @@ with open(fasta) as handle:
     for record in SeqIO.parse(handle, "fasta"):
         if len(record) < 1000:
             f = "tooShort.fa"
-        elif record.id not in bins:
+        elif record.id not in Metabinner_bins:
             f = "unbinned.fa"
         else:
-            f = prefix + bins[record.id] + ".fa"
+            f = prefix + Metabinner_bins[record.id] + ".fa"
         with open(os.path.join(path, f), 'a') as out:
             SeqIO.write(record, out, "fasta")

@@ -9,6 +9,7 @@ include { GUNZIP as GUNZIP_BINS                 } from '../../modules/nf-core/gu
 include { GUNZIP as GUNZIP_UNBINS               } from '../../modules/nf-core/gunzip/main'
 
 include { METABINNER                            } from '../../modules/local/metabinner'
+include { METAWRAP                              } from '../../modules/local/metawrap'
 include { CONVERT_DEPTHS                        } from '../../modules/local/convert_depths'
 include { ADJUST_MAXBIN2_EXT                    } from '../../modules/local/adjust_maxbin2_ext'
 include { SPLIT_FASTA                           } from '../../modules/local/split_fasta'
@@ -45,9 +46,7 @@ workflow BINNING {
 
     ch_metabat_depths = METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth
         .map { meta, depths ->
-            def meta_new = meta.clone()
-            meta_new['binner'] = 'MetaBAT2'
-
+            def meta_new = meta + [binner: 'MetaBAT2']
             [ meta_new, depths ]
         }
 
@@ -57,9 +56,7 @@ workflow BINNING {
 
     ch_metabat2_input = assemblies
         .map { meta, assembly, bams, bais ->
-            def meta_new = meta.clone()
-            meta_new['binner'] = 'MetaBAT2'
-
+            def meta_new = meta + [binner: 'MetaBAT2']
             [ meta_new, assembly, bams, bais ]
         }
         .join( ch_metabat_depths, by: 0 )
@@ -72,9 +69,7 @@ workflow BINNING {
         CONVERT_DEPTHS ( ch_metabat2_input )
         ch_maxbin2_input = CONVERT_DEPTHS.out.output
             .map { meta, assembly, reads, depth ->
-                    def meta_new = meta.clone()
-                    meta_new['binner'] = 'MaxBin2'
-
+                    def meta_new = meta + [binner: 'MaxBin2']
                 [ meta_new, assembly, reads, depth ]
             }
         ch_versions = ch_versions.mix(CONVERT_DEPTHS.out.versions.first())
@@ -137,6 +132,8 @@ workflow BINNING {
         ch_input_splitfasta = METABAT2_METABAT2.out.unbinned.mix(MAXBIN2.out.unbinned_fasta)
     }
 
+    
+
     SPLIT_FASTA ( ch_input_splitfasta )
     // large unbinned contigs from SPLIT_FASTA for decompressing for MAG_DEPTHS,
     // first have to separate and re-group due to limitation of GUNZIP module
@@ -195,7 +192,8 @@ workflow BINNING {
     // Group final binned contigs per sample for final output
     ch_binning_results_gunzipped_final = ch_binning_results_gunzipped.groupTuple(by: 0)
     ch_binning_results_gzipped_final   = ch_binning_results_gzipped_final.groupTuple(by: 0)
-
+    
+	    
     emit:
     bins                                         = ch_binning_results_gunzipped_final
     bins_gz                                      = ch_binning_results_gzipped_final

@@ -10,9 +10,10 @@ process METABINNER {
 
     output:
     tuple val(meta), path("*.tooShort.fa.gz")                       , optional:true , emit: tooshort
+    tuple val(meta), path("*.lowDepth.fa.gz")                       , optional:true, emit: lowdepth
     tuple val(meta), path("*.unbinned.fa.gz")                       , optional:true , emit: unbinned
     tuple val(meta), path("*.tsv.gz")                               , optional:true , emit: membership
-    tuple val(meta), path("bins/*.fa.gz")                           , optional:true , emit: fasta
+    tuple val(meta), path("Metabinner_bins/*.fa.gz")                , optional:true , emit: fasta
     tuple val(meta), path("*.log.gz")                               , optional:true , emit: log
     tuple val(meta), path("coverage_profile.tsv")                   , optional:true , emit: coverage_profile
     tuple val(meta), path("*kmer_4_f1000.csv")                      , optional:true , emit: composition_profile
@@ -46,13 +47,13 @@ process METABINNER {
         -p \${metabinner_path}
 
     mv ${prefix}/metabinner_res/metabinner_result.tsv ${prefix}.tsv
-    python ${projectDir}/bin/create_metabinner_bins.py ${prefix}.tsv ${fasta} \${wd}/bins ${prefix}
+    python ${projectDir}/bin/create_metabinner_bins.py ${prefix}.tsv ${fasta} \${wd}/Metabinner_bins ${prefix}
 
-    gzip ${prefix}.tsv
+    gzip -cn ${prefix} > ${prefix}.tsv.gz
 
     mv \${outname}_${args}.fa \${outname}.tooShort.fa
-    find ./bins/ -name "*.fa" -type f | xargs -t -n 1 bgzip -@ ${task.cpus}
-    find ./bins/ -name "*[lowDepth,tooShort,unbinned].fa.gz" -type f -exec mv {} . \\;
+    find ./Metabinner_bins/ -name "*.fa" -type f | xargs -t -n 1 bgzip -@ ${task.cpus}
+    find ./Metabinner_bins/ -name "*[lowDepth,tooShort,unbinned].fa.gz" -type f -exec mv {} . \\;
 
     cat <<-END_VERSIONS > versions.yml
         Metabinner: 1.4.4-0
