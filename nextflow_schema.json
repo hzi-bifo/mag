@@ -598,7 +598,11 @@
                 "skip_binning": {
                     "type": "boolean",
                     "description": "Skip metagenome binning entirely"
-                },
+		},
+                 "skip_metabinner": {
+                    "type": "boolean",
+                    "description": "Skip MetaBinner Binning"
+		},
                 "skip_metabat2": {
                     "type": "boolean",
                     "description": "Skip MetaBAT2 Binning"
@@ -610,6 +614,22 @@
                 "skip_concoct": {
                     "type": "boolean",
                     "description": "Skip CONCOCT Binning"
+                },
+		"skip_metawrap": {
+                    "type": "boolean",
+                    "description": "Skip MetaWRAP Binning Refinement"
+                },
+		"completion": {
+                    "type": "integer",
+                    "default": 50,
+                    "description": "Minimum % completion of bins [should be >50%] (default=50)",
+                    "help_text": "The precentage of expected single-copy genes that is found in a bin is interpreted as its completion"
+                },
+                 "contamination": {
+                    "type": "integer",
+                    "default": 10,
+                    "description": "Maximum % contamination of bins that is acceptable (default=10)",
+                    "help_text": "The precentage of single-copy genes that are found in duplicate is estimated as contamination"
                 },
                 "min_contig_size": {
                     "type": "integer",

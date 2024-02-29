@@ -25,7 +25,7 @@ process METAWRAP {
 
     script:
     def args = task.ext.args ?: ''
-    def completion =  params.completion ?: 70
+    def completion =  params.completion ?: 50
     def contamination = params.contamination ?: 10 
     """
     #!/bin/bash

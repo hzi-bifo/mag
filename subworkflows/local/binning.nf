@@ -124,12 +124,17 @@ workflow BINNING {
 
     // decide which unbinned fasta files to further filter, depending on which binners selected
     // NOTE: CONCOCT does not produce 'unbins' itself, therefore not included here.
-    if ( !params.skip_metabat2 & params.skip_maxbin2 ) {
-        ch_input_splitfasta = METABAT2_METABAT2.out.unbinned
-    } else if ( params.skip_metabat2 & !params.skip_maxbin2 ) {
-        ch_input_splitfasta = MAXBIN2.out.unbinned_fasta
-    } else {
-        ch_input_splitfasta = METABAT2_METABAT2.out.unbinned.mix(MAXBIN2.out.unbinned_fasta)
+
+    ch_input_splitfasta = Channel.empty()
+
+    if ( !params.skip_metabat2 ) {
+        ch_input_splitfasta = ch_input_splitfasta.mix(METABAT2_METABAT2.out.unbinned)
+    }
+    if ( !params.skip_maxbin2 ) {
+        ch_input_splitfasta = ch_input_splitfasta.mix(MAXBIN2.out.unbinned_fasta)
+    }
+    if ( !params.skip_metabinner ) {
+        ch_input_splitfasta = ch_input_splitfasta.mix(METABINNER.out.unbinned)
     }
 
     
