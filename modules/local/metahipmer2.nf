@@ -5,7 +5,7 @@ process MHM2 {
     // container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
     //     'file://./pipelines/images/mhm2.2.sif' :
     //     'quay.io/biocontainers/spades:3.15.3--h95f258a_0' }"
-    container "${baseDir}/../images/mhm2.latest.sif"
+    container "/homes/zldeng/projects/pipelines/images/mhm2.latest.sif"
 
 
     input:
