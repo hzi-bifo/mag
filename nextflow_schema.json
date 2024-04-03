@@ -565,6 +565,10 @@
                     "type": "boolean",
                     "description": "Skip Flye."
                 },
+                "skip_mhm2": {
+                    "type": "boolean",
+                    "description": "Skip MetaHipMer."
+                },
                 "only_long_read": {
                     "type": "boolean",
                     "description": "Only long reads data."
