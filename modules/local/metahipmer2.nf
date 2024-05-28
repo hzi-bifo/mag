@@ -2,10 +2,10 @@ process MHM2 {
     tag "$meta.id"
 
     conda "bioconda::spades=3.15.3"
-    // container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-    //     'file://./pipelines/images/mhm2.2.sif' :
-    //     'quay.io/biocontainers/spades:3.15.3--h95f258a_0' }"
-    container "/homes/zldeng/projects/pipelines/images/mhm2.latest.sif"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+         'file://./pipelines/images/mhm2.2.sif' :
+         'quay.io/heshamalmessady/metahipmer2:latest' }"
+    //container "/homes/zldeng/projects/pipelines/images/mhm2.latest.sif"
 
 
     input:
