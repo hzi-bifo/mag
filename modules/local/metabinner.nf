@@ -3,7 +3,7 @@ process METABINNER {
     conda "bioconda::metabinner=1.4.4-0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
     'https://depot.galaxyproject.org/singularity/metabinner:1.4.4--hdfd78af_0' :
-    'https://quay.io/biocontainers/metabinner:1.4.4--hdfd78af_0' }"
+    'quay.io/biocontainers/metabinner:1.4.4--hdfd78af_0' }"
 
     input:
     tuple val(meta), path(fasta), path(depth)
