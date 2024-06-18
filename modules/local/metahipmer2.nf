@@ -27,8 +27,9 @@ process MHM2 {
         """
         gunzip -dc ${reads1} > ${meta.id}_1.fastq
         gunzip -dc ${reads2} > ${meta.id}_2.fastq
+	--shm-size=32g
 
-        mhm2 $args -p ${meta.id}_1.fastq ${meta.id}_2.fastq \
+        mhm2.py $args -p ${meta.id}_1.fastq ${meta.id}_2.fastq \
             -o ${meta.id}
 
         # mv ${meta.id}/assembly_graph_with_scaffolds.gfa SPAdes-${meta.id}_graph.gfa
