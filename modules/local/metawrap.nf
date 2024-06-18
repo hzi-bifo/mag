@@ -4,7 +4,7 @@ process METAWRAP {
     conda "bioconda::metawrap-mg"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/metawrap-mg:1.3.0--hdfd78af_1' :
-        'quay.io/biocontainers/metawrap-mg' }"
+        'quay.io/biocontainers/metawrap-mg:1.3.0--hdfd78af_1' }"
 
     input:
     path(bins)
