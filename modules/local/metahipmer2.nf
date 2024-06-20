@@ -6,6 +6,7 @@ process MHM2 {
          'file://./pipelines/images/mhm2.2.sif' :
          'quay.io/heshamalmessady/metahipmer2:latest' }"
     //container "/homes/zldeng/projects/pipelines/images/mhm2.latest.sif"
+    containerOptions '--shm-size 16g'
 
 
     input:
@@ -28,7 +29,7 @@ process MHM2 {
         gunzip -dc ${reads1} > ${meta.id}_1.fastq
         gunzip -dc ${reads2} > ${meta.id}_2.fastq
 
-        mhm2 $args -p ${meta.id}_1.fastq ${meta.id}_2.fastq \
+        mhm2.py $args -p ${meta.id}_1.fastq ${meta.id}_2.fastq \
             -o ${meta.id}
 
         # mv ${meta.id}/assembly_graph_with_scaffolds.gfa SPAdes-${meta.id}_graph.gfa
