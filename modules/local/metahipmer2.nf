@@ -42,7 +42,7 @@ process MHM2 {
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
             python: \$(python --version 2>&1 | sed 's/Python //g')
-            mhm2: \$(mhm2 --help 2>&1| grep 'MHM2 version'| sed 's/MHM2 version //'| sed 's/- with upcxx-util.*//')
+            mhm2: "2.2.0.0.151-gfd4a8d06-master"
         END_VERSIONS
         """
     else
