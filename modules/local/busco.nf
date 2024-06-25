@@ -8,7 +8,8 @@ process BUSCO {
 
     input:
     tuple val(meta), path(bin)
-    tuple val(db_meta), path(db)
+    path(db)
+    path(download_folder)
 
     output:
     tuple val(meta), path("short_summary.domain.*.${bin}.txt")          , optional:true , emit: summary_domain
