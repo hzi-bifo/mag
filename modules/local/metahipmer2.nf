@@ -40,9 +40,7 @@ process MHM2 {
         gzip -c "MHM2-${meta.id}_scaffolds.fasta" > "MHM2-${meta.id}_scaffolds.fasta.gz"
 
         cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            python: \$(python --version 2>&1 | sed 's/Python //g')
-            mhm2: "2.2.0.0.151-gfd4a8d06-master"
+            MetaHipMer2: "2.2.0.0.151-gfd4a8d06-master"
         END_VERSIONS
         """
     else
