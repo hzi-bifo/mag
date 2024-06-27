@@ -8,7 +8,7 @@ process BUSCO {
 
     input:
     tuple val(meta), path(bin)
-    path(db)
+    tuple val(db_meta), path(db)
     path(download_folder)
 
     output:
