@@ -1,6 +1,6 @@
 ## Introduction
 
-This pipeline is a modified version of the nf-core/mag workflow, which was adapted to incorporate metagenomic methods recognized for their performance in the CAMI2 benchmark.  To broaden the utility and applicability of the workflow, we have integrated support for long reads data, incorporating the long-read assembler [Flye](https://github.com/fenderglass/Flye) alongside the  short-read assembler [MetaHipMer](https://bitbucket.org/berkeleylab/mhm2/src/master/). Moreover, the workflow now incorporates additional well performing metagenome binners and bin refinement tools, such as [MetaBinner](https://github.com/ziyewang/MetaBinner), [UltraBinner](https://github.com/Huangpq2019/UltraBinner), and [MetaWRAP](https://github.com/bxlab/metaWRAP). 
+This pipeline is a modified version of the nf-core/mag workflow, which was adapted to incorporate metagenomic methods recognized for their performance in the CAMI2 benchmark.  To broaden the utility and applicability of the workflow, we have integrated further support for long reads data, incorporating the long-read assembler [Flye](https://github.com/fenderglass/Flye) alongside the  short-read assembler [MetaHipMer](https://bitbucket.org/berkeleylab/mhm2/src/master/). Moreover, the workflow now incorporates additional well performing metagenome binners and bin refinement tools, such as [MetaBinner](https://github.com/ziyewang/MetaBinner), [UltraBinner](https://github.com/Huangpq2019/UltraBinner), and [MetaWRAP](https://github.com/bxlab/metaWRAP). 
 
 
 
