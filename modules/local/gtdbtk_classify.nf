@@ -1,5 +1,6 @@
 process GTDBTK_CLASSIFY {
     tag "${meta.assembler}-${meta.binner}-${meta.id}"
+    label 'process_high_memory'
 
     conda "bioconda::gtdbtk=1.5.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
