@@ -1,10 +1,10 @@
 ## Introduction
 
-This pipeline is a modified version of the renowned nf-core/mag workflow, meticulously refined to incorporate best practice tools recognized for their performance in the CAMI2 benchmark. In an effort to broaden the utility and applicability of the workflow, we have integrated support specifically for long reads data, incorporating the advanced long-read assembler [Flye](https://github.com/fenderglass/Flye) alongside the high-performing short-read assembler [MetaHipMer](https://bitbucket.org/berkeleylab/mhm2/src/master/). Moreover, the workflow now incorporates additional highly performant metagenome binners and bin refinement tools, including [MetaBinner](https://github.com/ziyewang/MetaBinner), [UltraBinner](https://github.com/Huangpq2019/UltraBinner), and [MetaWRAP](https://github.com/bxlab/metaWRAP). 
+This pipeline is a modified version of the nf-core/mag workflow, which was adapted to incorporate metagenomic methods recognized for their performance in the CAMI2 benchmark.  To broaden the utility and applicability of the workflow, we have integrated support for only long reads data, incorporating the long-read assembler [Flye](https://github.com/fenderglass/Flye). For the short reads data, the best performing short-read assembler [MetaHipMer](https://bitbucket.org/berkeleylab/mhm2/src/master/) in CAMI2 benchmark was included. Moreover, the workflow now incorporates additional well performing metagenome binners and bin refinement tools, such as [MetaBinner](https://github.com/ziyewang/MetaBinner), [UltraBinner](https://github.com/Huangpq2019/UltraBinner), and [MetaWRAP](https://github.com/bxlab/metaWRAP). 
 
 
 
-The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
+The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a portable manner. It uses Docker/Singularity containers to facilitate installation and make results reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process, which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
 
 On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources.The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/mag/results).
 
@@ -68,21 +68,9 @@ When group-wise co-assembly is enabled, `SPAdes` is run on accordingly pooled re
 
 ## Credits
 
-nf-core/mag was written by [Hadrien Gourlé](https://hadriengourle.com) at [SLU](https://slu.se), [Daniel Straub](https://github.com/d4straub) and [Sabrina Krakau](https://github.com/skrakau) at the [Quantitative Biology Center (QBiC)](http://qbic.life). [James A. Fellows Yates](https://github.com/jfy133) and [Maxime Borry](https://github.com/maxibor) at the [Max Planck Institute for Evolutionary Anthropology](https://www.eva.mpg.de) joined in version 2.2.0.
+The original nf-core/mag (https://nf-co.re/mag/) was written by [Hadrien Gourlé](https://hadriengourle.com) at [SLU](https://slu.se), [Daniel Straub](https://github.com/d4straub) and [Sabrina Krakau](https://github.com/skrakau) at the [Quantitative Biology Center (QBiC)](http://qbic.life). [James A. Fellows Yates](https://github.com/jfy133) and [Maxime Borry](https://github.com/maxibor) at the [Max Planck Institute for Evolutionary Anthropology](https://www.eva.mpg.de) joined in version 2.2.0.
 
-Long read processing was inspired by [caspargross/HybridAssembly](https://github.com/caspargross/HybridAssembly) written by Caspar Gross [@caspargross](https://github.com/caspargross)
-
-We thank the following people for their extensive assistance in the development of this pipeline:
-
-- [Alexander Peltzer](https://github.com/apeltzer)
-- [Antonia Schuster](https://github.com/antoniaschuster)
-- [Phil Ewels](https://github.com/ewels)
-- [Gisela Gabernet](https://github.com/ggabernet)
-- [Harshil Patel](https://github.com/drpatelh)
-- [Johannes Alneberg](https://github.com/alneberg)
-- [Maxime Garcia](https://github.com/MaxUlysse)
-- [Michael L Heuer](https://github.com/heuermh)
-- [Alex Hübner](https://github.com/alexhbnr)
+This modified version was adapted by [Hesham Almessady](https://github.com/HeshamAlmessady), [Zhi-Luo Deng](https://github.com/dawnmy) and [Adrian Fritz](https://github.com/AlphaSquad) at the Helmholtz Centre for Infection Research.
 
 ## Contributions and Support
 
