@@ -427,10 +427,6 @@
                     "type": "boolean",
                     "description": "Only return official taxonomic ranks (Kingdom, Phylum, etc.) when running CAT."
                 },
-                "skip_gtdbtk": {
-                    "type": "boolean",
-                    "description": "Skip the running of GTDB, as well as the automatic download of the database"
-                },
                 "gtdb": {
                     "type": "string",
                     "default": "https://data.gtdb.ecogenomic.org/releases/release202/202.0/auxillary_files/gtdbtk_r202_data.tar.gz",
