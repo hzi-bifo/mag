@@ -1,6 +1,6 @@
 process MHM2 {
     tag "$meta.id"
-    label 'process_high'
+    label 'highmemLarge'
     conda "bioconda::spades=3.15.3"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
          'file://./pipelines/images/mhm2.2.sif' :
