@@ -216,6 +216,23 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 
 </details>
 
+### MetaHipMer2
+
+[MetaHipMer2](https://bitbucket.org/berkeleylab/mhm2/src/master/) is a de novo metagenome short-read assembler, which is written in UPC++, CUDA and HIP, and runs efficiently on both single servers and on multinode supercomputers, where it can scale up to coassemble terabase-sized metagenomes.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `Assembly/MHM2/`
+  - `[sample/group]_scaffolds.fasta.gz`: Compressed assembled scaffolds in fasta format
+  - `[sample/group].log`: Log file
+  - `QC/[sample/group]/`: Directory containing QUAST files and Bowtie2 mapping logs
+    - `MHM2-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
+    - `MHM2-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
+
+</details>
+
+
 ### Metagenome QC with QUAST
 
 [QUAST](http://cab.spbu.ru/software/quast/) is a tool that evaluates metagenome assemblies by computing various metrics. The QUAST output is also included in the MultiQC report, as well as in the assembly directories themselves.
@@ -277,7 +294,7 @@ These depth files are used for downstream binning steps.
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/MetaBAT2/`
+- `GenomeBinning/MetaBAT2_bins/`
   - `bins/[assembler]-[binner]-[sample/group].*.fa.gz`: Genome bins retrieved from input assembly
   - `unbinned/[assembler]-[binner]-[sample/group].unbinned.[1-9]*.fa.gz`: Contigs that were not binned with other contigs but considered interesting. By default, these are at least 1 Mbp (`--min_length_unbinned_contigs`) in length and at most the 100 longest contigs (`--max_unbinned_contigs`) are reported
 
@@ -288,10 +305,10 @@ All the files and contigs in these folders will be assessed by QUAST and BUSCO.
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/MetaBAT2/discarded/`
+- `GenomeBinning/MetaBAT2_bins/discarded/`
   - `*.lowDepth.fa.gz`: Low depth contigs that are filtered by MetaBAT2
   - `*.tooShort.fa.gz`: Too short contigs that are filtered by MetaBAT2
-- `GenomeBinning/MetaBAT2/unbinned/discarded/`
+- `GenomeBinning/MetaBAT2_bins/unbinned/discarded/`
   - `*.unbinned.pooled.fa.gz`: Pooled unbinned contigs equal or above `--min_contig_size`, by default 1500 bp.
   - `*.unbinned.remaining.fa.gz`: Remaining unbinned contigs below `--min_contig_size`, by default 1500 bp, but not in any other file.
 
@@ -308,7 +325,7 @@ Files in these two folders contain all contigs of an assembly.
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/MaxBin2/`
+- `GenomeBinning/MaxBin2_bins/`
   - `bins/[assembler]-[binner]-[sample/group].*.fa.gz`: Genome bins retrieved from input assembly
   - `unbinned/[assembler]-[binner]-[sample/group].noclass.[1-9]*.fa.gz`: Contigs that were not binned with other contigs but considered interesting. By default, these are at least 1 Mbp (`--min_length_unbinned_contigs`) in length and at most the 100 longest contigs (`--max_unbinned_contigs`) are reported.
 
@@ -319,11 +336,42 @@ All the files and contigs in these folders will be assessed by QUAST and BUSCO.
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/MaxBin2/discarded/`
+- `GenomeBinning/MaxBin2_bins/discarded/`
   - `*.tooshort.gz`: Too short contigs that are filtered by MaxBin2
-- `GenomeBinning/MaxBin2/unbinned/discarded/`
+- `GenomeBinning/MaxBin2_bins/unbinned/discarded/`
   - `*.noclass.pooled.fa.gz`: Pooled unbinned contigs equal or above `--min_contig_size`, by default 1500 bp.
   - `*.noclass.remaining.fa.gz`: Remaining unbinned contigs below `--min_contig_size`, by default 1500 bp, but not in any other file.
+
+</details>
+
+All the files in this folder contain small and/or unbinned contigs that are not further processed.
+
+Files in these two folders contain all contigs of an assembly.
+
+### MetaBinner
+
+[MetaBinner](https://github.com/ziyewang/MetaBinner) recovers genome bins (that is, contigs/scaffolds that all belongs to a same organism) from metagenome assemblies.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/Metabinner_bins/`
+  - `bins/[assembler]-[binner]-[sample/group].*.fa.gz`: Genome bins retrieved from input assembly
+  - `unbinned/[assembler]-[binner]-[sample/group].unbinned.[1-9]*.fa.gz`: Contigs that were not binned with other contigs but considered interesting. By default, these are at least 1 Mbp (`--min_length_unbinned>
+
+</details>
+
+All the files and contigs in these folders will be assessed by QUAST and BUSCO.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/Metabinner_bins/discarded/`
+  - `*.lowDepth.fa.gz`: Low depth contigs that are filtered by MetaBAT2
+  - `*.tooShort.fa.gz`: Too short contigs that are filtered by MetaBAT2
+- `GenomeBinning/Metabinner_bins/unbinned/discarded/`
+  - `*.unbinned.pooled.fa.gz`: Pooled unbinned contigs equal or above `--min_contig_size`, by default 1500 bp.
+  - `*.unbinned.remaining.fa.gz`: Remaining unbinned contigs below `--min_contig_size`, by default 1500 bp, but not in any other file.
 
 </details>
 
