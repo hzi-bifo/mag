@@ -10,7 +10,10 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input", "outdir"],
+            "required": [
+                "input",
+                "outdir"
+            ],
             "properties": {
                 "input": {
                     "type": "string",
@@ -58,7 +61,8 @@
                     "description": "Do not load the iGenomes reference config.",
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
-                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
+                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`.",
+                    "default": true
                 }
             }
         },
@@ -170,7 +174,14 @@
                     "description": "Method used to save pipeline results to output directory.",
                     "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
                     "fa_icon": "fas fa-copy",
-                    "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
+                    "enum": [
+                        "symlink",
+                        "rellink",
+                        "link",
+                        "copy",
+                        "copyNoFollow",
+                        "move"
+                    ],
                     "hidden": true
                 },
                 "max_multiqc_email_size": {
@@ -243,7 +254,8 @@
                 "megahit_fix_cpu_1": {
                     "type": "boolean",
                     "description": "Fix number of CPUs for MEGAHIT to 1. Not increased with retries.",
-                    "help_text": "MEGAHIT only generates reproducible results when run single-threaded. \n\nWhen using this parameter do not change the number of CPUs for the `megahit` process with a custom config file. This would result in an error.\n\nDefault: The number of CPUs is specified in the `base.config` file, and increased with each retry."
+                    "help_text": "MEGAHIT only generates reproducible results when run single-threaded. \n\nWhen using this parameter do not change the number of CPUs for the `megahit` process with a custom config file. This would result in an error.\n\nDefault: The number of CPUs is specified in the `base.config` file, and increased with each retry.",
+                    "default": true
                 },
                 "spades_fix_cpus": {
                     "type": "integer",
@@ -253,7 +265,7 @@
                 },
                 "spadeshybrid_fix_cpus": {
                     "type": "integer",
-                    "default": -1,
+                    "default": 0,
                     "description": "Fix number of CPUs used by SPAdes hybrid. Not increased with retries.",
                     "help_text": "SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results fix the number of CPUs using this parameter.\n\nWhen using this parameter do not change the number of CPUs for the `spadeshybrid` process with a custom config file. This would result in an error.\n\nDefault: -1 (the number of CPUs is specified in the `base.config` or in a custom config file, and increased with each retry)."
                 },
@@ -276,7 +288,10 @@
                     "type": "string",
                     "default": "fastp",
                     "description": "Specify which adapter clipping tool to use.",
-                    "enum": ["fastp", "adapterremoval"]
+                    "enum": [
+                        "fastp",
+                        "adapterremoval"
+                    ]
                 },
                 "save_clipped_reads": {
                     "type": "boolean",
@@ -347,7 +362,8 @@
                 },
                 "keep_phix": {
                     "type": "boolean",
-                    "description": "Keep reads similar to the Illumina internal standard PhiX genome."
+                    "description": "Keep reads similar to the Illumina internal standard PhiX genome.",
+                    "default": true
                 },
                 "phix_reference": {
                     "type": "string",
@@ -433,12 +449,14 @@
                 },
                 "skip_krona": {
                     "type": "boolean",
-                    "description": "Skip creating a krona plot for taxonomic binning."
+                    "description": "Skip creating a krona plot for taxonomic binning.",
+                    "default": true
                 },
                 "cat_db": {
                     "type": "string",
                     "description": "Database for taxonomic classification of metagenome assembled genomes. Can be either a zipped file or a directory containing the extracted output of such.",
-                    "help_text": "E.g. https://tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20210107.tar.gz. This parameter is mutually exclusive with `--cat_db_generate`. The file needs to contain a folder named `*taxonomy*` and `*database*` that hold the respective files."
+                    "help_text": "E.g. https://tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20210107.tar.gz. This parameter is mutually exclusive with `--cat_db_generate`. The file needs to contain a folder named `*taxonomy*` and `*database*` that hold the respective files.",
+                    "default": "/vol/projects/hes23/CAT_prepare_20210107.tar.gz"
                 },
                 "cat_db_generate": {
                     "type": "boolean",
@@ -452,7 +470,8 @@
                 },
                 "cat_official_taxonomy": {
                     "type": "boolean",
-                    "description": "Only return official taxonomic ranks (Kingdom, Phylum, etc.) when running CAT."
+                    "description": "Only return official taxonomic ranks (Kingdom, Phylum, etc.) when running CAT.",
+                    "default": true
                 },
                 "gtdb": {
                     "type": "string",
@@ -530,7 +549,8 @@
                 },
                 "skip_spadeshybrid": {
                     "type": "boolean",
-                    "description": "Skip SPAdes hybrid assembly."
+                    "description": "Skip SPAdes hybrid assembly.",
+                    "default": true
                 },
                 "skip_megahit": {
                     "type": "boolean",
@@ -542,7 +562,8 @@
                 },
                 "skip_flye": {
                     "type": "boolean",
-                    "description": "Skip Flye."
+                    "description": "Skip Flye.",
+                    "default": true
                 },
                 "skip_mhm2": {
                     "type": "boolean",
@@ -581,11 +602,11 @@
                 "skip_binning": {
                     "type": "boolean",
                     "description": "Skip metagenome binning entirely"
-		        },
+                },
                 "skip_metabinner": {
                     "type": "boolean",
                     "description": "Skip MetaBinner Binning"
-		        },
+                },
                 "skip_metabat2": {
                     "type": "boolean",
                     "description": "Skip MetaBAT2 Binning"
@@ -596,13 +617,15 @@
                 },
                 "skip_concoct": {
                     "type": "boolean",
-                    "description": "Skip CONCOCT Binning"
+                    "description": "Skip CONCOCT Binning",
+                    "default": true
                 },
-		        "skip_metawrap": {
+                "skip_metawrap": {
                     "type": "boolean",
-                    "description": "Skip MetaWRAP Binning Refinement"
+                    "description": "Skip MetaWRAP Binning Refinement",
+                    "default": true
                 },
-		        "completion": {
+                "completion": {
                     "type": "integer",
                     "default": 50,
                     "description": "Minimum % completion of bins [should be >50%] (default=50)",
@@ -651,13 +674,17 @@
             "properties": {
                 "skip_binqc": {
                     "type": "boolean",
-                    "description": "Disable bin QC with BUSCO or CheckM."
+                    "description": "Disable bin QC with BUSCO or CheckM.",
+                    "default": true
                 },
                 "binqc_tool": {
                     "type": "string",
                     "default": "busco",
                     "description": "Specify which tool for bin quality-control validation to use.",
-                    "enum": ["busco", "checkm"]
+                    "enum": [
+                        "busco",
+                        "checkm"
+                    ]
                 },
                 "busco_reference": {
                     "type": "string",
@@ -681,11 +708,12 @@
                 "busco_clean": {
                     "type": "boolean",
                     "description": "Enable clean-up of temporary files created during BUSCO runs.",
-                    "help_text": "By default, BUSCO creates a large number of intermediate files every run. This may cause problems on some clusters which have file number limits in plate, particularly with large numbers of bins. Enabling this option cleans these files, reducing the total file count of the work directory."
+                    "help_text": "By default, BUSCO creates a large number of intermediate files every run. This may cause problems on some clusters which have file number limits in plate, particularly with large numbers of bins. Enabling this option cleans these files, reducing the total file count of the work directory.",
+                    "default": true
                 },
                 "checkm_db": {
                     "type": "string",
-                    "default": "None",
+                    "default": "/vol/data/databases/clowm/CLDB-018e191c493176c3b3b4514a28b6d331/latest",
                     "description": "Path to local folder containing already downloaded and uncompressed CheckM database.",
                     "help_text": "The pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm_data`. You should move this directory to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm_db`."
                 },
@@ -702,29 +730,37 @@
                     "type": "number",
                     "default": 0.5,
                     "description": "Specify single-copy gene score threshold for bin refinement.",
-                    "help_text": "Score threshold for single-copy gene selection algorithm to keep selecting bins, with a value ranging from 0-1.\n\nFor description of scoring algorithm, see: Sieber, Christian M. K., et al. 2018. Nature Microbiology 3 (7): 836\u201343. https://doi.org/10.1038/s41564-018-0171-1.\n\n> Modifies DAS Tool parameter --score_threshold\n"
+                    "help_text": "Score threshold for single-copy gene selection algorithm to keep selecting bins, with a value ranging from 0-1.\n\nFor description of scoring algorithm, see: Sieber, Christian M. K., et al. 2018. Nature Microbiology 3 (7): 836–43. https://doi.org/10.1038/s41564-018-0171-1.\n\n> Modifies DAS Tool parameter --score_threshold\n"
                 },
                 "postbinning_input": {
                     "type": "string",
                     "default": "raw_bins_only",
                     "description": "Specify which binning output is sent for downstream annotation, taxonomic classification, bin quality control etc.",
                     "help_text": "`raw_bins_only`: only bins (and unbinned contigs) from the binners.\n`refined_bins_only`:  only bins (and unbinned contigs) from the bin refinement step .\n`both`: bins and unbinned contigs from both the binning and bin refinement steps.",
-                    "enum": ["raw_bins_only", "refined_bins_only", "both"]
+                    "enum": [
+                        "raw_bins_only",
+                        "refined_bins_only",
+                        "both"
+                    ]
                 },
                 "run_gunc": {
                     "type": "boolean",
-                    "description": "Turn on GUNC genome chimerism checks"
+                    "description": "Turn on GUNC genome chimerism checks",
+                    "default": true
                 },
                 "gunc_db": {
                     "type": "string",
-                    "default": "None",
+                    "default": "/vol/data/databases/clowm/CLDB-018e75b260a672c7a1051c96b1a3bb1a/018e75b260b07b35ab2cb6d202505f42/gunc_db_progenomes2.1.dmnd",
                     "description": "Specify a path to a pre-downloaded GUNC dmnd database file"
                 },
                 "gunc_database_type": {
                     "type": "string",
                     "default": "progenomes",
                     "description": "Specify which database to auto-download if not supplying own",
-                    "enum": ["progenomes", "gtdb"]
+                    "enum": [
+                        "progenomes",
+                        "gtdb"
+                    ]
                 },
                 "gunc_save_db": {
                     "type": "boolean",
