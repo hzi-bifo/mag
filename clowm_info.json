@@ -1,0 +1,19 @@
+{
+  "inputParameters": [
+    "input"
+  ],
+  "outputParameters": [
+    "outdir"
+  ],
+  "exampleParameters": {
+    "input": "s3://mag-bucket/read_{1,2}.fastq.gz",
+    "max_cpus": 28,
+    "max_memory": "480.GB",
+    "max_time": "240.h"
+  },
+  "resourceParameters": [
+    "max_cpus",
+    "max_memory",
+    "max_time"
+  ]
+}
