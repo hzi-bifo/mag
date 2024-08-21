@@ -14,8 +14,7 @@ process GTDBTK_DB_PREPARATION {
 
     script:
     """
-    mkdir database
-    tar -xzf ${database} -C database --strip 1
+    ln -s /vol/data/databases/clowm/CLDB-018e12ef116275458ea149715133b0ec/018e12ef116c7f84a8a3360ccf11471f database 
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
