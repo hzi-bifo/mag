@@ -13,14 +13,14 @@ process GTDBTK_CLASSIFY {
 
     output:
     path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.summary.tsv"        , emit: summary
-    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.classify.tree.gz"   , emit: tree
-    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.markers_summary.tsv", emit: markers
-    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.msa.fasta.gz"       , emit: msa
-    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.user_msa.fasta"     , emit: user_msa
-    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.filtered.tsv"       , emit: filtered
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.classify.tree.gz"   , emit: tree, optional: true
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.markers_summary.tsv", emit: markers, optional: true
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.msa.fasta.gz"       , emit: msa, optional: true
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.user_msa.fasta"     , emit: user_msa, optional: true
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.filtered.tsv"       , emit: filtered, optional: true
     path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.log"                  , emit: log
     path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.warnings.log"         , emit: warnings
-    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.failed_genomes.tsv"   , emit: failed
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.failed_genomes.tsv"   , emit: failed, optional: true
     path "versions.yml"                                                            , emit: versions
 
     script:
@@ -43,7 +43,8 @@ process GTDBTK_CLASSIFY {
                     --min_perc_aa ${params.gtdbtk_min_perc_aa} \
                     --min_af ${params.gtdbtk_min_af}
 
-    gzip "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}".*.classify.tree "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}".*.msa.fasta
+    find -name "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}".*.classify.tree" | xargs -r gzip # do not fail if .tree is missing
+    find -name "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}".*.msa.fasta" | xargs -r gzip 
     mv gtdbtk.log "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.log"
     mv gtdbtk.warnings.log "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.warnings.log"
 
