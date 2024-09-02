@@ -16,7 +16,7 @@ process GTDBTK_CLASSIFY {
     path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.classify.tree.gz"   , emit: tree, optional: true
     path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.markers_summary.tsv", emit: markers, optional: true
     path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.msa.fasta.gz"       , emit: msa, optional: true
-    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.user_msa.fasta"     , emit: user_msa, optional: true
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.user_msa.fasta.gz"  , emit: user_msa, optional: true
     path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.filtered.tsv"       , emit: filtered, optional: true
     path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.log"                  , emit: log
     path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.warnings.log"         , emit: warnings
@@ -43,8 +43,21 @@ process GTDBTK_CLASSIFY {
                     --min_perc_aa ${params.gtdbtk_min_perc_aa} \
                     --min_af ${params.gtdbtk_min_af}
 
-    find -name "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}".*.classify.tree" | xargs -r gzip # do not fail if .tree is missing
-    find -name "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}".*.msa.fasta" | xargs -r gzip 
+    if [[ -d classify/ ]]; then
+        mv classify/* .
+    fi
+
+    if [[ -d identify/ ]]; then
+        mv identify/* .
+    fi
+
+    ## If nothing aligns, no output, so only run
+    if [[ -d align/ ]]; then
+        mv align/* .
+    fi
+
+    find -name "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.classify.tree" | xargs -r gzip # do not fail if .tree is missing
+    find -name "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.msa.fasta" | xargs -r gzip  
     mv gtdbtk.log "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.log"
     mv gtdbtk.warnings.log "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.warnings.log"
 
