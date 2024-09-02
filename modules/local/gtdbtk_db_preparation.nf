@@ -14,7 +14,7 @@ process GTDBTK_DB_PREPARATION {
 
     script:
     """
-    ln -s /vol/data/databases/clowm/CLDB-018e12ef116275458ea149715133b0ec/latest/release214 database 
+    ln -s /vol/data/databases/clowm/CLDB-018e12ef116275458ea149715133b0ec/0191a206ee117d008a3fd9308cf4f971/release214 database 
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
