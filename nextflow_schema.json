@@ -475,7 +475,7 @@
                 },
                 "gtdb": {
                     "type": "string",
-                    "default": "/vol/data/databases/clowm/CLDB-018e12ef116275458ea149715133b0ec/0191a206ee117d008a3fd9308cf4f971",
+                    "default": "/vol/data/databases/clowm/CLDB-018e12ef116275458ea149715133b0ec/0191a206ee117d008a3fd9308cf4f971/release214",
                     "description": "GTDB database for taxonomic classification of bins with GTDB-tk.",
                     "help_text": "For information which GTDB reference databases are compatible with the used GTDB-tk version see https://ecogenomics.github.io/GTDBTk/installing/index.html#gtdb-tk-reference-data."
                 },
