@@ -52,7 +52,7 @@
                     "type": "string",
                     "format": "directory-path",
                     "description": "Directory / URL base for iGenomes references.",
-                    "default": "/vol/data/databases/clowm/CLDB-018e3d18ff2a78f495a1b50df8baec4f/018e3d18ff34720eb88e16b0704728ed",
+                    "default": "",
                     "fa_icon": "fas fa-cloud-download-alt",
                     "hidden": true
                 },
@@ -475,7 +475,7 @@
                 },
                 "gtdb": {
                     "type": "string",
-                    "default": "/vol/data/databases/clowm/CLDB-018e12ef116275458ea149715133b0ec/0191a206ee117d008a3fd9308cf4f971/release214",
+                    "default": "",
                     "description": "GTDB database for taxonomic classification of bins with GTDB-tk.",
                     "help_text": "For information which GTDB reference databases are compatible with the used GTDB-tk version see https://ecogenomics.github.io/GTDBTk/installing/index.html#gtdb-tk-reference-data."
                 },
@@ -713,7 +713,7 @@
                 },
                 "checkm_db": {
                     "type": "string",
-                    "default": "/vol/data/databases/clowm/CLDB-018e191c493176c3b3b4514a28b6d331/latest",
+                    "default": "",
                     "description": "Path to local folder containing already downloaded and uncompressed CheckM database.",
                     "help_text": "The pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm_data`. You should move this directory to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm_db`."
                 },
@@ -750,7 +750,7 @@
                 },
                 "gunc_db": {
                     "type": "string",
-                    "default": "/vol/data/databases/clowm/CLDB-018e75b260a672c7a1051c96b1a3bb1a/018e75b260b07b35ab2cb6d202505f42/gunc_db_progenomes2.1.dmnd",
+                    "default": "",
                     "description": "Specify a path to a pre-downloaded GUNC dmnd database file"
                 },
                 "gunc_database_type": {
