@@ -7,7 +7,7 @@ This pipeline is a modified version of the nf-core/mag workflow, which was adapt
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a portable manner. It uses Docker containers to facilitate installation and make results reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process, which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
 
 <picture>
-    <img src="docs/images/mag_workflow.png" alt="nf-core/mag workflow overview" width="90%">
+    <img src="https://github.com/hzi-bifo/mag/blob/CloWM/docs/images/mag_workflow.png?raw=true" alt="nf-core/mag workflow overview" width="90%">
 </picture>
 
 ## Pipeline summary
