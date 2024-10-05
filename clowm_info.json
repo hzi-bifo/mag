@@ -6,7 +6,7 @@
     "outdir"
   ],
   "exampleParameters": {
-    "input": "s3://mag-bucket/read_{1,2}.fastq.gz",
+    "input": "s3://workflow-exampledata/nf-core-mag-cami2-bp/example1/fastq/read_{1,2}.fastq.gz",
     "max_cpus": 28,
     "max_memory": "480.GB",
     "max_time": "240.h"
