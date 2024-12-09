@@ -4,9 +4,9 @@ process MHM2 {
     conda "bioconda::spades=3.15.3"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
          'file://./pipelines/images/mhm2.2.sif' :
-         'quay.io/heshamalmessady/metahipmer2:latest' }"
+         'robegan21/mhm2:v2.2.0.0' }"
     //container "/homes/zldeng/projects/pipelines/images/mhm2.latest.sif"
-    containerOptions '--shm-size 16g'
+    containerOptions '--shm-size ${task.process}g'
 
 
     input:
@@ -29,7 +29,7 @@ process MHM2 {
         gunzip -dc ${reads1} > ${meta.id}_1.fastq
         gunzip -dc ${reads2} > ${meta.id}_2.fastq
 
-        mhm2.py $args -p ${meta.id}_1.fastq ${meta.id}_2.fastq \
+        mhm2.py --procs ${task.process} --nodes 1 $args -p ${meta.id}_1.fastq ${meta.id}_2.fastq \
             -o ${meta.id}
 
         # mv ${meta.id}/assembly_graph_with_scaffolds.gfa SPAdes-${meta.id}_graph.gfa
