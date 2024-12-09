@@ -6,7 +6,7 @@ process MHM2 {
          'file://./pipelines/images/mhm2.2.sif' :
          'robegan21/mhm2:v2.2.0.0' }"
     //container "/homes/zldeng/projects/pipelines/images/mhm2.latest.sif"
-    containerOptions '--shm-size ${task.cpus}g'
+    containerOptions '--shm-size 16g'
 
 
     input:
