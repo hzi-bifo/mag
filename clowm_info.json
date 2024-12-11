@@ -12,8 +12,10 @@
     "max_time": "240.h"
   },
   "resourceParameters": [
-    "max_cpus",
-    "max_memory",
-    "max_time"
+    "igenomes_base",
+    "cat_db",
+    "gtdb",
+    "gunc_db",
+    "checkm_db"
   ]
 }
