@@ -672,7 +672,8 @@
             "properties": {
                 "skip_binqc": {
                     "type": "boolean",
-                    "description": "Disable bin QC with BUSCO or CheckM."
+                    "description": "Disable bin QC with BUSCO or CheckM.",
+		    "default": true
                 },
                 "binqc_tool": {
                     "type": "string",
@@ -702,7 +703,8 @@
                 "busco_clean": {
                     "type": "boolean",
                     "description": "Enable clean-up of temporary files created during BUSCO runs.",
-                    "help_text": "By default, BUSCO creates a large number of intermediate files every run. This may cause problems on some clusters which have file number limits in plate, particularly with large numbers of bins. Enabling this option cleans these files, reducing the total file count of the work directory."
+                    "help_text": "By default, BUSCO creates a large number of intermediate files every run. This may cause problems on some clusters which have file number limits in plate, particularly with large numbers of bins. Enabling this option cleans these files, reducing the total file count of the work directory.",
+		    "default": true
                 },
                 "checkm_db": {
                     "type": "string",
