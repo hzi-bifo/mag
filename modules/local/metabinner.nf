@@ -56,6 +56,7 @@ process METABINNER {
     find ./Metabinner_bins/ -name "*[lowDepth,tooShort,unbinned].fa.gz" -type f -exec mv {} . \\;
 
     cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
         Metabinner: 1.4.4-0
     END_VERSIONS
     """
