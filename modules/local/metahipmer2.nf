@@ -25,14 +25,16 @@ process MHM2 {
     script:
     def args = task.ext.args ?: ''
     maxmem = task.memory.toGiga()
+    def input_cmd = meta.single_end ? "-u ${meta.id}_1.fastq" : "-p ${meta.id}_1.fastq ${meta.id}_2.fastq"
     if ( params.mhm2_fix_cpus == -1 || task.cpus == params.mhm2_fix_cpus )
         """
         gunzip -dc ${reads1} > ${meta.id}_1.fastq
-        gunzip -dc ${reads2} > ${meta.id}_2.fastq
-
-        mhm2.py --procs ${task.cpus} --nodes 1 $args -p ${meta.id}_1.fastq ${meta.id}_2.fastq \
-            -o ${meta.id}
-
+        ${meta.single_end ? "" : "gunzip -dc ${reads2} > ${meta.id}_2.fastq"}
+        # gunzip -dc ${reads2} > ${meta.id}_2.fastq
+        # mhm2.py --procs ${task.cpus} --nodes 1 $args -p ${meta.id}_1.fastq ${meta.id}_2.fastq \
+        #    -o ${meta.id}
+        #mhm2.py --procs ${task.cpus} --nodes 1 $args $input_cmd -o ${meta.id}
+        mhm2.py $args $input_cmd -o ${meta.id}
         # mv ${meta.id}/assembly_graph_with_scaffolds.gfa SPAdes-${meta.id}_graph.gfa
         mv ${meta.id}/final_assembly.fasta MHM2-${meta.id}_scaffolds.fasta
         mv ${meta.id}/mhm2.log MHM2-${meta.id}.log
@@ -41,6 +43,7 @@ process MHM2 {
         gzip -c "MHM2-${meta.id}_scaffolds.fasta" > "MHM2-${meta.id}_scaffolds.fasta.gz"
 
         cat <<-END_VERSIONS > versions.yml
+        "${task.process}":
             MetaHipMer2: 2.2.0.0.151-gfd4a8d06-master
         END_VERSIONS
         """
