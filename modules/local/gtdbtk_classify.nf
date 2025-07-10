@@ -42,7 +42,22 @@ process GTDBTK_CLASSIFY {
                     --min_perc_aa ${params.gtdbtk_min_perc_aa} \
                     --min_af ${params.gtdbtk_min_af}
 
-    gzip "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}".*.classify.tree "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}".*.msa.fasta
+
+    if [[ -d classify/ ]]; then
+        mv classify/* .
+    fi
+
+    if [[ -d identify/ ]]; then
+        mv identify/* .
+    fi
+
+    ## If nothing aligns, no output, so only run
+    if [[ -d align/ ]]; then
+        mv align/* .
+    fi
+
+    find -name "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.classify.tree" | xargs -r gzip # do not fail if .tree is missing
+    find -name "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.msa.fasta" | xargs -r gzip  
     mv gtdbtk.log "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.log"
     mv gtdbtk.warnings.log "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.warnings.log"
 
